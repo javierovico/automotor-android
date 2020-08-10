@@ -8,7 +8,10 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
-class MyCall<T : Any?>(private val context: Context) : Callback<T> {
+abstract class MyCall<T : Any?>(private val context: Context) : Callback<T> {
+
+    abstract fun onSuccefull(valor: T?)
+
     override fun onFailure(call: Call<T>, t: Throwable) {
         Toast.makeText(context,t.message.toString(), Toast.LENGTH_LONG).show()
     }
@@ -16,13 +19,9 @@ class MyCall<T : Any?>(private val context: Context) : Callback<T> {
     override fun onResponse(call: Call<T>, response: Response<T>) {
         if(!response.isSuccessful){
             val responseJson = JSONObject(response.errorBody()?.string()?:"{}")
-            Toast.makeText(context,responseJson.getString("message"),Toast.LENGTH_LONG).show()
+            Toast.makeText(context,responseJson.getString("message") + "\nCode: "+response.code() ,Toast.LENGTH_LONG).show()
         }else{
-            tokenManager = response.body()!!
-            tokenManager.saveToken(context.getSharedPreferences("prefs",
-                AppCompatActivity.MODE_PRIVATE
-            ).edit())
-            onSuccess()
+            this.onSuccefull(response.body())
         }
     }
 

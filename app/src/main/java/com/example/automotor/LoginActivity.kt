@@ -7,6 +7,7 @@ import android.widget.Toast
 import com.example.automotor.utils.ApiRest
 import com.example.automotor.utils.RetrofitBuilder
 import com.example.automotor.utils.entities.AccessToken
+import com.example.automotor.utils.entities.User
 import kotlinx.android.synthetic.main.activity_main.*
 import org.json.JSONObject
 import retrofit2.Call
@@ -59,11 +60,19 @@ class LoginActivity : AppCompatActivity() {
             AccessToken.ROL_ADMIN -> {
                 startActivity(Intent(this@LoginActivity, AdminActivity::class.java))
             }
-            AccessToken.ROL_VISITANTE ->{
+            AccessToken.ROL_VISITANTE, User.comprador ->{
                 startActivity(Intent(this@LoginActivity, AutomotorVisorActivity::class.java))
             }
+            User.vendedor->{
+                Toast.makeText(applicationContext,"Rol Vendedor",Toast.LENGTH_LONG).show()
+                startActivity(Intent(this@LoginActivity, VendedorActivity::class.java))
+            }
+            User.cajero -> {
+                Toast.makeText(applicationContext,"Rol Vendedor",Toast.LENGTH_LONG).show()
+                startActivity(Intent(this@LoginActivity, CajeroActivity::class.java))
+            }
             else ->{
-                Toast.makeText(applicationContext,"Rol Desconocido",Toast.LENGTH_LONG).show()
+                Toast.makeText(applicationContext,"Rol Desconocido "+tokenManager.rolId,Toast.LENGTH_LONG).show()
             }
         }
         finish()
